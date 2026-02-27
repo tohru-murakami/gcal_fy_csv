@@ -1,23 +1,19 @@
-Googleカレンダー → CSV変換ツール
+# Googleカレンダー → CSV変換ツール
 
 このツールは Googleカレンダーの予定をCSVに変換します。
 今年度（4月1日〜翌年3月31日）の予定だけを出力します。
 
 出力ファイル：
 
-gunma_FY.csv
+`gunma_FY.csv`
 
 Excelで開くことができます。
 
-
---------------------------------
-1. ICS URLの取得方法
---------------------------------
+##  ICS URLの取得方法
 
 Googleカレンダーを開きます：
 
-https://calendar.google.com/
-
+`https://calendar.google.com/`
 
 左側の「マイカレンダー」で対象のカレンダーの
 「︙」をクリックします。
@@ -40,117 +36,79 @@ https://calendar.google.com/
 表示されるURLをコピーします。
 
 
-URLの例：
+URLの例：`https://calendar.google.com/calendar/ical/XXXXXXXX%40group.calendar.google.com/private-XXXXXXXX/basic.ics`
 
-https://calendar.google.com/calendar/ical/XXXXXXXX%40group.calendar.google.com/private-XXXXXXXX/basic.ics
+非公開のカレンダーのURLは秘密情報です。他人に公開しないでください。
 
+## Macでの使い方
 
-このURLは秘密情報です。
-他人に公開しないでください。
+1. mac_gcal_fy_csv.command を開きます
 
+2. 次の行を探します：
 
---------------------------------
-2. Macでの使い方
---------------------------------
+   `ICS_URL="https://calendar.google.com/calendar/ical/XXXX/basic.ics"`
 
-1 mac_gcal_fy_csv.command を開きます
+3. XXXX の部分をコピーしたURLに置き換えます
 
-2 次の行を探します：
+   例：`ICS_URL="https://calendar.google.com/calendar/ical/XXXXXXXX/basic.ics"`
 
-ICS_URL="https://calendar.google.com/calendar/ical/XXXX/basic.ics"
+4. ファイルを保存します
 
+5. 初回だけ
 
-3 XXXX の部分をコピーしたURLに置き換えます
+   `chmod +x mac_gcal_fy_csv.command`
 
+6. ダブルクリックします
 
-例：
+   CSVファイルが作成されます：
 
-ICS_URL="https://calendar.google.com/calendar/ical/XXXXXXXX/basic.ics"
+   `gunma_FY.csv`
 
+## Windowsでの使い方
 
-4 ファイルを保存します
+1. `win_gcal_fy_csv.ps1` をメモ帳で開きます
 
-5 初回だけ
+2. 次の行を探します：
 
-chmod +x mac_gcal_fy_csv.command
+   `$IcsUrl = "https://calendar.google.com/calendar/ical/XXXX/basic.ics"`
 
+3. XXXX の部分をコピーしたURLに置き換えます
 
-5 ダブルクリックします
+4. 保存します
 
+5. PowerShellを開きます
 
-CSVファイルが作成されます：
+6. このフォルダに移動します
 
-gunma_FY.csv
+   例：`cd Desktop\calendar_export`
 
+7. 実行します：
 
+   `Set-ExecutionPolicy -Scope Process Bypass`
 
---------------------------------
-3. Windowsでの使い方
---------------------------------
+   `.\win_gcal_fy_csv.ps1`
 
-1 win_gcal_fy_csv.ps1 をメモ帳で開きます
+8. CSVファイルが作成されます：
 
+   `gunma_FY.csv`
 
-2 次の行を探します：
+## トラブル対処
 
-$IcsUrl = "https://calendar.google.com/calendar/ical/XXXX/basic.ics"
+- CSVが空の場合
 
+  - URLが間違っている可能性があります。
 
-3 XXXX の部分をコピーしたURLに置き換えます
+- Excelで文字化けする場合
 
+  - Excelの「データ → テキストから」で読み込んでください。
 
-4 保存します
+- Macで開けない場合
 
+  - 最初に一度だけ実行します：
 
-5 PowerShellを開きます
+    `chmod +x mac_gcal_fy_csv.command`
 
-
-6 このフォルダに移動します
-
-
-例：
-
-cd Desktop\calendar_export
-
-
-7 実行します：
-
-Set-ExecutionPolicy -Scope Process Bypass
-
-.\win_gcal_fy_csv.ps1
-
-
-CSVファイルが作成されます：
-
-gunma_FY.csv
-
-
-
---------------------------------
-4. トラブル対処
---------------------------------
-
-■ CSVが空の場合
-
-URLが間違っている可能性があります。
-
-
-■ Excelで文字化けする場合
-
-Excelの「データ → テキストから」で読み込んでください。
-
-
-■ Macで開けない場合
-
-最初に一度だけ実行します：
-
-chmod +x mac_gcal_fy_csv.command
-
-
-
---------------------------------
-5. 注意
---------------------------------
+## 注意
 
 ICS URLは秘密情報です。
 
