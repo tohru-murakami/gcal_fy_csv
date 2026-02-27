@@ -70,6 +70,10 @@ ICS_URL="https://calendar.google.com/calendar/ical/XXXXXXXX/basic.ics"
 
 4 ファイルを保存します
 
+5 初回だけ
+
+chmod +x mac_gcal_fy_csv.command
+
 
 5 ダブルクリックします
 
