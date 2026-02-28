@@ -1,20 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
-# Finderダブルクリック対策（必須）
+# Finderダブルクリック対策
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# ===== ICS URL（ここを書き換える） =====
+# ===== ICS URL =====
 
 ICS_URL="https://calendar.google.com/calendar/ical/XXXXXXXX/basic.ics"
 
-# =======================================
+# ===================
 
 OUT="$SCRIPT_DIR/gunma_FY.csv"
 TMP="$(mktemp)"
+TMPCSV="$(mktemp)"
 
-trap 'rm -f "$TMP"' EXIT
+trap 'rm -f "$TMP" "$TMPCSV"' EXIT
 
 echo
 echo "Google Calendar → CSV Export"
@@ -25,10 +26,9 @@ echo "Downloading calendar..."
 curl -fsSL "$ICS_URL" -o "$TMP"
 
 echo "Downloaded."
-
 echo
 
-# ===== 年度計算（4月〜翌年3月） =====
+# ===== 年度判定 =====
 
 Y=$(date +%Y)
 M=$(date +%m)
@@ -49,10 +49,13 @@ echo "Fiscal Year:"
 echo "${FY_START_YEAR}-04-01 → ${FY_END_YEAR}-03-31"
 
 echo
-
 echo "Creating CSV..."
+echo
 
+# ヘッダ
 echo "start,end,summary,location,description" > "$OUT"
+
+# データ生成（テンポラリへ）
 
 awk -v FY_START="$FY_START" -v FY_END="$FY_END" '
 
@@ -140,13 +143,18 @@ sub(/^DESCRIPTION:/,"")
 desc=$0
 }
 
-' "$TMP" >> "$OUT"
+' "$TMP" > "$TMPCSV"
+
+
+# ===== 日時順ソート =====
+
+sort "$TMPCSV" >> "$OUT"
 
 echo
 echo "Created:"
 echo "$OUT"
-echo
 
+echo
 echo "Rows:"
 wc -l "$OUT"
 

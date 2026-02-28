@@ -1,5 +1,6 @@
 # ===============================
 # Google Calendar ICS → CSV (FY)
+# Sorted by start datetime
 # ===============================
 
 # ===== ICS URL（ここを書き換える）=====
@@ -86,9 +87,7 @@ function YmdInt([string]$dt) {
 # VEVENT解析（RRULE展開なし）
 $events = @()
 $inEvent = $false
-$cur = @{
-  DTSTART=""; DTEND=""; SUMMARY=""; LOCATION=""; DESCRIPTION=""
-}
+$cur = @{ DTSTART=""; DTEND=""; SUMMARY=""; LOCATION=""; DESCRIPTION="" }
 
 foreach ($line in $lines) {
   if ($line -eq "BEGIN:VEVENT") {
@@ -122,13 +121,16 @@ foreach ($line in $lines) {
   if ($line -match '^DESCRIPTION:') { $cur.DESCRIPTION  = Get-ValueAfterColon $line; continue }
 }
 
+# ===== 日時順ソート（startで昇順）=====
+$eventsSorted = $events | Sort-Object -Property start
+
 # CSV出力（UTF-8 BOM付き：Excel対策）
 $utf8Bom = New-Object System.Text.UTF8Encoding($true)
-$csvLines = $events | ConvertTo-Csv -NoTypeInformation
+$csvLines = $eventsSorted | ConvertTo-Csv -NoTypeInformation
 [System.IO.File]::WriteAllLines($OutCsv, $csvLines, $utf8Bom)
 
 Write-Host "Created:"
 Write-Host $OutCsv
-Write-Host ("Rows output: {0}" -f $events.Count)
+Write-Host ("Rows output: {0}" -f $eventsSorted.Count)
 
 Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
